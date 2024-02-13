@@ -6,7 +6,7 @@ import com.example.webfluxexample.mapper.TaskListMapper;
 import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.model.UserModel;
-import lombok.RequiredArgsConstructor;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
 @SpringBootTest
-//@RequiredArgsConstructor
 class UserMapperTest {
     @Autowired
     private UserMapper userMapper;
@@ -57,15 +55,6 @@ class UserMapperTest {
         assertEquals(userModel.getEmail(), user.getEmail());
     }
 
-//    private String id;
-//    private String name;
-//    private String description;
-//    private Instant createdAt;
-//    private Instant updatedAt;
-//    private TaskStatus status;
-//    private String authorId;
-//    private String assigneeId;
-//    private Set<String> observerIds;
     @Test
     void shouldProperlyMapTaskModelListToTaskEntityList() {
         Instant dateNow = Instant.now();

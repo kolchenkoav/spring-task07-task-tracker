@@ -41,9 +41,20 @@ public class UserService {
 
     public Mono<ResponseEntity<UserModel>> save(UserModel userModel) {
         userModel.setId(UUID.randomUUID().toString());
-        return userRepository.save(userMapper.toEntity(userModel))
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+
+        Mono<User> user = userRepository.save(userMapper.toEntity(userModel));
+
+        UserModel userModel1 = userMapper.toModel(user.blockOptional().orElse(null));
+
+        ResponseEntity<UserModel> userModelResponseEntity = ResponseEntity.ok(userModel1);
+
+        Mono<UserModel> userModelMono = Mono.just(userModel1);
+
+//        Mono<ResponseEntity<UserModel>> responseEntityMono = userModelMono
+//                .map(ResponseEntity::ok)
+//                .defaultIfEmpty(ResponseEntity.ok().build());
+
+        return Mono.just(userModelResponseEntity);
     }
 
 //    public Mono<User> update(String id, User user) {
