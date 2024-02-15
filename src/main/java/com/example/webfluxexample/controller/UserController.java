@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<UserModel>> createItem(@RequestBody UserModel userModel) {
-        return userService.save(userModel);
+    public Mono<UserModel> createItem(@RequestBody UserModel userModel) {
+        return userService.save(userModel).log();
 
     }
 //

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -39,22 +40,11 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public Mono<ResponseEntity<UserModel>> save(UserModel userModel) {
+    public Mono<UserModel> save(UserModel userModel) {
         userModel.setId(UUID.randomUUID().toString());
-
         Mono<User> user = userRepository.save(userMapper.toEntity(userModel));
 
-        UserModel userModel1 = userMapper.toModel(user.blockOptional().orElse(null));
-
-        ResponseEntity<UserModel> userModelResponseEntity = ResponseEntity.ok(userModel1);
-
-        Mono<UserModel> userModelMono = Mono.just(userModel1);
-
-//        Mono<ResponseEntity<UserModel>> responseEntityMono = userModelMono
-//                .map(ResponseEntity::ok)
-//                .defaultIfEmpty(ResponseEntity.ok().build());
-
-        return Mono.just(userModelResponseEntity);
+        return user.map(userMapper::toModel).cast(UserModel.class);
     }
 
 //    public Mono<User> update(String id, User user) {
