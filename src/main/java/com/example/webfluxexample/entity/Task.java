@@ -18,6 +18,7 @@ public class Task {
     private Instant createdAt;
     private Instant updatedAt;
     private TaskStatus status;
+
     private String authorId;
     private String assigneeId;
     private Set<String> observerIds;

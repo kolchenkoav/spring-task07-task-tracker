@@ -1,10 +1,8 @@
 package com.example.webfluxexample.service;
 
 import com.example.webfluxexample.entity.Task;
-import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.mapper.TaskMapper;
 import com.example.webfluxexample.model.TaskModel;
-import com.example.webfluxexample.model.UserModel;
 import com.example.webfluxexample.publisher.TaskUpdatesPublisher;
 import com.example.webfluxexample.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +13,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -30,6 +29,8 @@ public class TaskService {
     }
 
     public Mono<ResponseEntity<TaskModel>> findById(String id) {
+        Mono<Task> taskMono = taskRepository.findById(id);
+        taskMono.subscribe(System.out::println);
         return taskRepository.findById(id)
                 .map(taskMapper::toModel)
                 .map(ResponseEntity::ok)
@@ -37,9 +38,18 @@ public class TaskService {
     }
 
     public Mono<ResponseEntity<TaskModel>> save(TaskModel taskModel) {
-        taskModel.setId(UUID.randomUUID().toString());
-        Mono<Task> taskMono = taskRepository.save(taskMapper.toEntity(taskModel));
-
+        Task task = taskMapper.toEntity(taskModel);
+        task.setId(UUID.randomUUID().toString());
+        Instant instant = Instant.now();
+        task.setCreatedAt(instant);
+        task.setUpdatedAt(instant);
+        if (taskModel.getAuthor().getId() != null) {
+            task.setAuthorId(taskModel.getAuthor().getId());
+        }
+        if (taskModel.getAssignee() != null) {
+            task.setAssigneeId(taskModel.getAssignee().getId());
+        }
+        Mono<Task> taskMono = taskRepository.save(task).log();
         return taskMono.map(taskMapper::toModel).cast(TaskModel.class)
                 .doOnSuccess(taskUpdatesPublisher::publish)
                 .map(ResponseEntity::ok);

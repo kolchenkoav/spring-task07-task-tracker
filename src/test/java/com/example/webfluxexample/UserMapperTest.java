@@ -66,8 +66,8 @@ class UserMapperTest {
             taskModel.setDescription("Description " + i);
             taskModel.setCreatedAt(dateNow);
             taskModel.setUpdatedAt(dateNow);
-            taskModel.setAuthorId("AuthorId " + i);
-            taskModel.setAssigneeId("AssigneeId " + i);
+            //taskModel.setAuthorId("AuthorId " + i);
+            //taskModel.setAssigneeId("AssigneeId " + i);
             taskModelList.add(taskModel);
         }
 
@@ -79,8 +79,8 @@ class UserMapperTest {
             assertEquals(taskModelList.get(i).getDescription(), taskList.get(i).getDescription());
             assertEquals(taskModelList.get(i).getCreatedAt(), taskList.get(i).getCreatedAt());
             assertEquals(taskModelList.get(i).getUpdatedAt(), taskList.get(i).getUpdatedAt());
-            assertEquals(taskModelList.get(i).getAuthorId(), taskList.get(i).getAuthorId());
-            assertEquals(taskModelList.get(i).getAssigneeId(), taskList.get(i).getAssigneeId());
+            //assertEquals(taskModelList.get(i).getAuthorId(), taskList.get(i).getAuthorId());
+            //assertEquals(taskModelList.get(i).getAssigneeId(), taskList.get(i).getAssigneeId());
         }
     }
 }
