@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -42,6 +43,22 @@ public class TaskService {
         return taskMono.map(taskMapper::toModel).cast(TaskModel.class)
                 .doOnSuccess(taskUpdatesPublisher::publish)
                 .map(ResponseEntity::ok);
+    }
+
+    public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel) {
+        return taskRepository.findById(id).flatMap(taskForUpdate -> {
+            Task task = taskMapper.toEntity(taskModel);
+
+            if (StringUtils.hasText(task.getName())) {
+                taskForUpdate.setName(task.getName());
+                taskForUpdate.setDescription(task.getDescription());
+                taskForUpdate.setStatus(task.getStatus());
+            }
+
+            return taskRepository.save(taskForUpdate).map(taskMapper::toModel)
+                    .map(ResponseEntity::ok).log()
+                    .defaultIfEmpty(ResponseEntity.notFound().build());
+        });
     }
 
     public Mono<ResponseEntity<Void>> deleteById(String id) {

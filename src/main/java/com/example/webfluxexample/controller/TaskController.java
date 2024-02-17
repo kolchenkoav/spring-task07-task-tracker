@@ -28,7 +28,12 @@ public class TaskController {
     @PostMapping
     public Mono<ResponseEntity<TaskModel>> createTask(@RequestBody TaskModel taskModel) {
         return taskService.save(taskModel).log();
+    }
 
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<TaskModel>> updateTask(@PathVariable String id,
+                                                      @RequestBody TaskModel taskModel) {
+        return taskService.update(id, taskModel);
     }
 
     @DeleteMapping("/{id}")
