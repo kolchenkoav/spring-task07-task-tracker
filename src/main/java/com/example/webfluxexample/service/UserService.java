@@ -3,11 +3,13 @@ package com.example.webfluxexample.service;
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.UserModel;
+import com.example.webfluxexample.publisher.UserUpdatesPublisher;
 import com.example.webfluxexample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,8 +21,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
+    private final UserUpdatesPublisher userUpdatesPublisher;
 
     public Flux<UserModel> findAll() {
         return userRepository.findAll().map(userMapper::toModel);
@@ -40,31 +42,32 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    public Mono<UserModel> save(UserModel userModel) {
+    public Mono<ResponseEntity<UserModel>> save(UserModel userModel) {
         userModel.setId(UUID.randomUUID().toString());
         Mono<User> user = userRepository.save(userMapper.toEntity(userModel));
 
-        return user.map(userMapper::toModel).cast(UserModel.class);
+        return user.map(userMapper::toModel).cast(UserModel.class)
+                .doOnSuccess(userUpdatesPublisher::publish)
+                .map(ResponseEntity::ok);
     }
 
-//    public Mono<User> update(String id, User user) {
-//        return findById(id).flatMap(itemForUpdate -> {
-//            if (StringUtils.hasText(user.getUsername())) {
-//                itemForUpdate.setUsername(user.getUsername());
-//                itemForUpdate.setEmail(user.getEmail());
-//            }
-//
-////            if (item.getCount() != null) {
-////                itemForUpdate.setCount(item.getCount());
-////            }
-////            if (item.getSubItems() != null) {
-////                itemForUpdate.setSubItems(item.getSubItems());
-////            }
-//            return itemRepository.save(itemForUpdate);
-//        });
-//    }
+    public Mono<ResponseEntity<UserModel>> update(String id, UserModel userModel) {
+        return userRepository.findById(id).flatMap(userForUpdate -> {
+            User user = userMapper.toEntity(userModel);
 
-    public Mono<Void> deleteById(String id) {
-        return userRepository.deleteById(id);
+            if (StringUtils.hasText(user.getUsername())) {
+                userForUpdate.setUsername(user.getUsername());
+                userForUpdate.setEmail(user.getEmail());
+            }
+
+            return userRepository.save(userForUpdate).map(userMapper::toModel)
+                    .map(ResponseEntity::ok)
+                    .defaultIfEmpty(ResponseEntity.notFound().build());
+        });
+    }
+
+    public Mono<ResponseEntity<Void>> deleteById(String id) {
+        return userRepository.deleteById(id).log()
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }

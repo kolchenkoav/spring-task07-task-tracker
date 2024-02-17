@@ -2,6 +2,8 @@ package com.example.webfluxexample.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -15,7 +15,4 @@ public class User {
     private String id;
     private String username;
     private String email;
-
-    @Field("tasks")
-    private List<Task> tasks;
 }
