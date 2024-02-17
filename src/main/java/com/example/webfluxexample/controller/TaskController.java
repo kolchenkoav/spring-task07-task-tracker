@@ -16,23 +16,23 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public Flux<TaskModel> getAllItems() {
+    public Flux<TaskModel> getAllTasks() {
         return taskService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<TaskModel>> getById(@PathVariable String id) {
+    public Mono<ResponseEntity<TaskModel>> getTaskById(@PathVariable String id) {
         return taskService.findById(id);
     }
 
     @PostMapping
-    public Mono<ResponseEntity<TaskModel>> createUser(@RequestBody TaskModel taskModel) {
+    public Mono<ResponseEntity<TaskModel>> createTask(@RequestBody TaskModel taskModel) {
         return taskService.save(taskModel).log();
 
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String id) {
+    public Mono<ResponseEntity<Void>> deleteTask(@PathVariable String id) {
         return taskService.deleteById(id).log();
     }
 }

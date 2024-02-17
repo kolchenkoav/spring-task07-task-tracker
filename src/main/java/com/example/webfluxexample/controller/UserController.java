@@ -16,12 +16,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public Flux<UserModel> getAllItems() {
+    public Flux<UserModel> getAllTasks() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<UserModel>> getById(@PathVariable String id) {
+    public Mono<ResponseEntity<UserModel>> getUserById(@PathVariable String id) {
         return userService.findById(id);
     }
 
