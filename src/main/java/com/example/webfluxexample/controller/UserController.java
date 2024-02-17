@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserUpdatesPublisher publisher;
 
     @GetMapping
     public Flux<UserModel> getAllItems() {

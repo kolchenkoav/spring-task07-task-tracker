@@ -26,5 +26,4 @@ public interface UserMapper {
         return new ArrayList<>(userList.stream()
                 .map(this::toModel).toList());
     }
-
 }

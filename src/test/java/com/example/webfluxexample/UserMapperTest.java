@@ -2,7 +2,7 @@ package com.example.webfluxexample;
 
 import com.example.webfluxexample.entity.Task;
 import com.example.webfluxexample.entity.User;
-import com.example.webfluxexample.mapper.TaskListMapper;
+import com.example.webfluxexample.mapper.TaskMapper;
 import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.model.UserModel;
@@ -23,7 +23,7 @@ class UserMapperTest {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private TaskListMapper taskListMapper;
+    private TaskMapper taskMapper;
 
     @Test
     void shouldProperlyMapModelToEntity() {
@@ -71,7 +71,7 @@ class UserMapperTest {
             taskModelList.add(taskModel);
         }
 
-        List<Task> taskList = taskListMapper.toEntityList(taskModelList);
+        List<Task> taskList = taskMapper.toEntityList(taskModelList);
         assertNotNull(taskList);
         for (int i = 0; i < 3; i++) {
             assertEquals(taskModelList.get(i).getId(), taskList.get(i).getId());
