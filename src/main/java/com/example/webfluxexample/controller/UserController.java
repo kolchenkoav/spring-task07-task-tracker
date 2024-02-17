@@ -32,19 +32,19 @@ public class UserController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<UserModel>> createItem(@RequestBody UserModel userModel) {
+    public Mono<ResponseEntity<UserModel>> createUser(@RequestBody UserModel userModel) {
         return userService.save(userModel).log();
 
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<UserModel>> updateItem(@PathVariable String id,
+    public Mono<ResponseEntity<UserModel>> updateUser(@PathVariable String id,
                                                       @RequestBody UserModel userModel) {
         return userService.update(id, userModel);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> deleteItem(@PathVariable String id) {
+    public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String id) {
         return userService.deleteById(id);
     }
 }
