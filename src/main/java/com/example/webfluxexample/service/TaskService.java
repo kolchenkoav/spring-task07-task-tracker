@@ -1,6 +1,8 @@
 package com.example.webfluxexample.service;
 
 import com.example.webfluxexample.entity.Task;
+import com.example.webfluxexample.handler.SampleSubscriber;
+import com.example.webfluxexample.handler.TaskSubscriber;
 import com.example.webfluxexample.mapper.TaskMapper;
 import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.publisher.TaskUpdatesPublisher;
@@ -14,7 +16,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -29,8 +33,11 @@ public class TaskService {
     }
 
     public Mono<ResponseEntity<TaskModel>> findById(String id) {
+
+        TaskSubscriber<Task> ss2 = new TaskSubscriber<>();
         Mono<Task> taskMono = taskRepository.findById(id);
-        taskMono.subscribe(System.out::println);
+        taskMono.subscribe(ss2);
+
         return taskRepository.findById(id)
                 .map(taskMapper::toModel)
                 .map(ResponseEntity::ok)

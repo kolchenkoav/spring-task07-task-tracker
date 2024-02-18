@@ -1,15 +1,12 @@
 package com.example.webfluxexample.mapper;
 
 import com.example.webfluxexample.entity.Task;
-import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.model.TaskModel;
-import com.example.webfluxexample.repository.UserRepository;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {TaskModel.class, Task.class})
 public interface TaskMapper {
@@ -17,7 +14,6 @@ public interface TaskMapper {
 
     Task toEntity(TaskModel taskModel);
     TaskModel toModel(Task task);
-
 
     default List<Task> toEntityList(List<TaskModel> taskModelList) {
         return new ArrayList<>(taskModelList.stream()

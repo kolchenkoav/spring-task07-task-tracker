@@ -20,6 +20,10 @@ public class TaskModel {
     private Instant updatedAt;
     private TaskStatus status;
 
+    private String authorId;
+    private String assigneeId;
+    private Set<String> observerIds;
+
     private User author;
     private User assignee;
     private Set<User> observers;

@@ -2,7 +2,6 @@ package com.example.webfluxexample.mapper;
 
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.model.UserModel;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
