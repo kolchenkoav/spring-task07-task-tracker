@@ -33,6 +33,8 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         taskModel.setId(task.getId());
         taskModel.setName(task.getName());
         taskModel.setDescription(task.getDescription());
+        taskModel.setCreatedAt(task.getCreatedAt());
+        taskModel.setUpdatedAt(task.getUpdatedAt());
         taskModel.setAuthorId(task.getAuthorId());
         taskModel.setAssigneeId(task.getAssigneeId());
 

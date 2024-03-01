@@ -3,7 +3,6 @@ package com.example.webfluxexample.service;
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.UserModel;
-import com.example.webfluxexample.publisher.UserUpdatesPublisher;
 import com.example.webfluxexample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final UserUpdatesPublisher userUpdatesPublisher;
 
     public Flux<UserModel> findAll() {
         return userRepository.findAll().map(userMapper::toModel);
@@ -46,7 +44,7 @@ public class UserService {
         Mono<User> user = userRepository.save(userMapper.toEntity(userModel));
 
         return user.map(userMapper::toModel).cast(UserModel.class)
-                .doOnSuccess(userUpdatesPublisher::publish)
+                //.doOnSuccess(userUpdatesPublisher::publish)
                 .map(ResponseEntity::ok);
     }
 

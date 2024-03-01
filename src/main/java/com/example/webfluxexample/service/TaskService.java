@@ -5,13 +5,8 @@ import com.example.webfluxexample.entity.Task;
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.mapper.TaskMapper;
 import com.example.webfluxexample.model.TaskModel;
-import com.example.webfluxexample.publisher.TaskUpdatesPublisher;
 import com.example.webfluxexample.repository.TaskRepository;
 import com.example.webfluxexample.repository.UserRepository;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +28,6 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
-    private final TaskUpdatesPublisher taskUpdatesPublisher;
     private final UserRepository userRepository;
 
     public Flux<TaskModel> findAll() {
@@ -52,9 +46,6 @@ public class TaskService {
 
         Mono<TaskModel> taskModelMono = taskMono.map(taskMapper::toModel);
 
-        //AtomicReference<Set<User>> observersUser = new AtomicReference<>();
-       // AtomicReference<Set<String>> observerIds = new AtomicReference<>();
-
         taskModelMono = taskModelMono
             .zipWhen(task -> authorMono, Tuples::of)
             .publishOn(Schedulers.boundedElastic())
@@ -67,9 +58,6 @@ public class TaskService {
                 if (taskModel.getAssigneeId() != null) {
                     taskModel.setAssignee(assignee);
                 }
-
-                //Set<String> stringSet = taskModel.getObserverIds();
-                //observerIds.set(stringSet);
 
                 return taskModel;
             });
@@ -84,23 +72,21 @@ public class TaskService {
     }
 
     public Mono<ResponseEntity<TaskModel>> save(TaskModel taskModel) {
-        log.info("save task {}", taskModel);
-
         Task task = taskMapper.toEntity(taskModel);
         task.setId(UUID.randomUUID().toString());
         Instant instant = Instant.now();
         task.setCreatedAt(instant);
         task.setUpdatedAt(instant);
 
+        log.info("save task {}", taskModel);
         Mono<Task> taskMono = taskRepository.save(task);
         return taskMono.map(taskMapper::toModel).cast(TaskModel.class)
-            .doOnSuccess(taskUpdatesPublisher::publish)
             .map(ResponseEntity::ok);
     }
 
     public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel) {
         taskModel.setId(id);
-        log.info("UPDATE id:{} taskModel:{}", id, taskModel);
+
         return taskRepository.findById(id).flatMap(taskForUpdate -> {
             taskForUpdate.setId(id);
             taskForUpdate.setUpdatedAt(Instant.now());
@@ -124,7 +110,7 @@ public class TaskService {
             if (taskModel.getObserverIds() != null) {
                 taskForUpdate.setObserverIds(taskModel.getObserverIds());
             }
-
+            log.info("UPDATE id:{} taskModel:{}", id, taskForUpdate);
             return taskRepository.save(taskForUpdate).map(taskMapper::toModel)
                 .map(ResponseEntity::ok).log()
                 .defaultIfEmpty(ResponseEntity.notFound().build());
