@@ -2,19 +2,18 @@ package com.example.webfluxexample.mapper;
 
 import com.example.webfluxexample.entity.Task;
 import com.example.webfluxexample.entity.User;
-import com.example.webfluxexample.handler.UserSubscriber;
 import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
 
-@RequiredArgsConstructor
+@Slf4j
 public abstract class TaskMapperDelegate implements TaskMapper {
-    private final UserRepository userRepository;
-
-//    public TaskMapperDelegate(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Task toEntity(TaskModel taskModel) {
@@ -22,31 +21,35 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setId(taskModel.getId());
         task.setName(taskModel.getName());
         task.setDescription(taskModel.getDescription());
-
+        if (taskModel.getObserverIds() != null) {
+            task.setObserverIds(taskModel.getObserverIds());
+        }
         return task;
     }
 
     @Override
     public TaskModel toModel(Task task) {
-        System.out.println("@@@@@@@@@@@@@@");
         TaskModel taskModel = new TaskModel();
-
         taskModel.setId(task.getId());
         taskModel.setName(task.getName());
         taskModel.setDescription(task.getDescription());
+        taskModel.setAuthorId(task.getAuthorId());
+        taskModel.setAssigneeId(task.getAssigneeId());
 
-        if (task.getAuthorId() != null) {
-            taskModel.setAuthorId(task.getAuthorId());
+        if (task.getObserverIds() != null) {
+            taskModel.setObserverIds(task.getObserverIds());
+            Set<User> userSet = new HashSet<>();
 
-            Mono<User> userMono = userRepository.findById(task.getAuthorId());
+            Flux<User> userFlux = userRepository.findAllById(taskModel.getObserverIds())
+                .doOnNext(user -> {
+                    userSet.add(user);
+                    taskModel.setObservers(userSet);
+                });
+            userFlux.subscribe();
 
-            UserSubscriber<User> userUserSubscriber = new UserSubscriber<>();
-            userMono.subscribe(userUserSubscriber);
-
-//            User author = userUserSubscriber.getUser();
-//            taskModel.setAuthor(author);
-        } else {
-            System.out.println("*************");
+            Set<User> userSet1 = new HashSet<>();
+            userFlux.toIterable().forEach(userSet1::add);
+            taskModel.setObservers(userSet1);
         }
         return taskModel;
     }

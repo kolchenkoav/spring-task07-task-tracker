@@ -2,17 +2,22 @@ package com.example.webfluxexample.mapper;
 
 import com.example.webfluxexample.entity.Task;
 import com.example.webfluxexample.model.TaskModel;
-import org.mapstruct.*;
+import org.mapstruct.DecoratedWith;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@DecoratedWith(TaskMapperDelegate.class)
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {TaskModel.class, Task.class})
 public interface TaskMapper {
     TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
 
     Task toEntity(TaskModel taskModel);
+
     TaskModel toModel(Task task);
 
     default List<Task> toEntityList(List<TaskModel> taskModelList) {

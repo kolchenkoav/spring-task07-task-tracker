@@ -56,6 +56,8 @@ public class UserService {
 
             if (StringUtils.hasText(user.getUsername())) {
                 userForUpdate.setUsername(user.getUsername());
+            }
+            if (StringUtils.hasText(user.getEmail())) {
                 userForUpdate.setEmail(user.getEmail());
             }
 

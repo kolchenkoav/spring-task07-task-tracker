@@ -1,7 +1,6 @@
 package com.example.webfluxexample.controller;
 
 import com.example.webfluxexample.model.UserModel;
-import com.example.webfluxexample.publisher.UserUpdatesPublisher;
 import com.example.webfluxexample.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
