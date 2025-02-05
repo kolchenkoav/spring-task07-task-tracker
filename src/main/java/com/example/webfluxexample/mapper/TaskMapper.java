@@ -6,25 +6,44 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Интерфейс для преобразования между моделями задач и сущностями.
+ */
 @DecoratedWith(TaskMapperDelegate.class)
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {TaskModel.class, Task.class})
 public interface TaskMapper {
 
+    /**
+     * Преобразует модель задачи в сущность задачи.
+     *
+     * @param taskModel модель задачи
+     * @return сущность задачи
+     */
     Task toEntity(TaskModel taskModel);
 
+    /**
+     * Преобразует сущность задачи в модель задачи.
+     *
+     * @param task сущность задачи
+     * @return модель задачи
+     */
     TaskModel toModel(Task task);
 
-    default List<Task> toEntityList(List<TaskModel> taskModelList) {
-        return new ArrayList<>(taskModelList.stream()
-                .map(this::toEntity).toList());
-    }
+    /**
+     * Преобразует список моделей задач в список сущностей задач.
+     *
+     * @param taskModelList список моделей задач
+     * @return список сущностей задач
+     */
+    List<Task> toEntityList(List<TaskModel> taskModelList);
 
-    default List<TaskModel> toModelList(List<Task> taskList) {
-        return new ArrayList<>(taskList.stream()
-                .map(this::toModel).toList());
-    }
+    /**
+     * Преобразует список сущностей задач в список моделей задач.
+     *
+     * @param taskList список сущностей задач
+     * @return список моделей задач
+     */
+    List<TaskModel> toModelList(List<Task> taskList);
 }
-

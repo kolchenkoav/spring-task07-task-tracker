@@ -27,5 +27,4 @@ public class TaskModel {
     private User author;
     private User assignee;
     private Set<User> observers;
-
 }

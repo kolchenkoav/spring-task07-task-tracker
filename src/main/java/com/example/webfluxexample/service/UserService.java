@@ -14,6 +14,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+/**
+ * Сервис для работы с пользователями.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,10 +24,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    /**
+     * Найти всех пользователей.
+     *
+     * @return Поток моделей пользователей.
+     */
     public Flux<UserModel> findAll() {
         return userRepository.findAll().map(userMapper::toModel);
     }
 
+    /**
+     * Найти пользователя по идентификатору.
+     *
+     * @param id Идентификатор пользователя.
+     * @return Монада с ответом, содержащим модель пользователя или статус 404, если пользователь не найден.
+     */
     public Mono<ResponseEntity<UserModel>> findById(String id) {
         return userRepository.findById(id)
                 .map(userMapper::toModel)
@@ -32,6 +46,12 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Найти пользователя по имени пользователя.
+     *
+     * @param name Имя пользователя.
+     * @return Монада с ответом, содержащим модель пользователя или статус 404, если пользователь не найден.
+     */
     public Mono<ResponseEntity<UserModel>> findByUsername(String name) {
         return userRepository.findByUsername(name)
                 .map(userMapper::toModel)
@@ -39,6 +59,12 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Сохранить нового пользователя.
+     *
+     * @param userModel Модель пользователя для сохранения.
+     * @return Монада с ответом, содержащим сохраненную модель пользователя.
+     */
     public Mono<ResponseEntity<UserModel>> save(UserModel userModel) {
         userModel.setId(UUID.randomUUID().toString());
         Mono<User> user = userRepository.save(userMapper.toEntity(userModel));
@@ -48,6 +74,13 @@ public class UserService {
                 .map(ResponseEntity::ok);
     }
 
+    /**
+     * Обновить существующего пользователя.
+     *
+     * @param id Идентификатор пользователя для обновления.
+     * @param userModel Модель пользователя с обновленными данными.
+     * @return Монада с ответом, содержащим обновленную модель пользователя или статус 404, если пользователь не найден.
+     */
     public Mono<ResponseEntity<UserModel>> update(String id, UserModel userModel) {
         return userRepository.findById(id).flatMap(userForUpdate -> {
             User user = userMapper.toEntity(userModel);
@@ -65,6 +98,12 @@ public class UserService {
         });
     }
 
+    /**
+     * Удалить пользователя по идентификатору.
+     *
+     * @param id Идентификатор пользователя для удаления.
+     * @return Монада с ответом, содержащим статус 204, если пользователь успешно удален.
+     */
     public Mono<ResponseEntity<Void>> deleteById(String id) {
         return userRepository.deleteById(id).log()
                 .then(Mono.just(ResponseEntity.noContent().build()));

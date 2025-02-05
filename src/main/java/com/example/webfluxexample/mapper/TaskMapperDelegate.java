@@ -10,11 +10,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
+/**
+ * Абстрактный класс для преобразования объектов Task и TaskModel.
+ */
 @Slf4j
 public abstract class TaskMapperDelegate implements TaskMapper {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Преобразует TaskModel в Task.
+     *
+     * @param taskModel объект TaskModel для преобразования.
+     * @return объект Task.
+     */
     @Override
     public Task toEntity(TaskModel taskModel) {
         Task task = new Task();
@@ -27,6 +36,12 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         return task;
     }
 
+    /**
+     * Преобразует Task в TaskModel.
+     *
+     * @param task объект Task для преобразования.
+     * @return объект TaskModel.
+     */
     @Override
     public TaskModel toModel(Task task) {
         TaskModel taskModel = new TaskModel();

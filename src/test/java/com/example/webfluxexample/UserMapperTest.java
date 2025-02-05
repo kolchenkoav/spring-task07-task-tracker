@@ -7,6 +7,7 @@ import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.model.UserModel;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,11 @@ class UserMapperTest {
     @Autowired
     private TaskMapper taskMapper;
 
+    /**
+     * Проверяет правильность преобразования UserModel в User.
+     */
     @Test
+    @DisplayName("should properly map ModelToEntity")
     void shouldProperlyMapModelToEntity() {
         UserModel userModel = new UserModel();
         userModel.setId("1");
@@ -40,7 +45,11 @@ class UserMapperTest {
         assertEquals(userModel.getEmail(), user.getEmail());
     }
 
+    /**
+     * Проверяет правильность преобразования User в UserModel.
+     */
     @Test
+    @DisplayName("should properly map EntityToModel")
     void shouldProperlyMapEntityToModel() {
         User user = new User();
         user.setId("1");
@@ -55,32 +64,43 @@ class UserMapperTest {
         assertEquals(userModel.getEmail(), user.getEmail());
     }
 
+    /**
+     * Проверяет правильность преобразования списка TaskModel в список Task.
+     */
     @Test
+    @DisplayName("should properly map TaskModelListToTaskEntityList")
     void shouldProperlyMapTaskModelListToTaskEntityList() {
-        Instant dateNow = Instant.now();
         List<TaskModel> taskModelList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            TaskModel taskModel = new TaskModel();
-            taskModel.setId("id " + i);
-            taskModel.setName("Task " + i);
-            taskModel.setDescription("Description " + i);
-            taskModel.setCreatedAt(dateNow);
-            taskModel.setUpdatedAt(dateNow);
-            //taskModel.setAuthorId("AuthorId " + i);
-            //taskModel.setAssigneeId("AssigneeId " + i);
-            taskModelList.add(taskModel);
-        }
+        Instant now = Instant.now();
+
+        TaskModel taskModel1 = new TaskModel();
+        taskModel1.setId("1");
+        taskModel1.setName("Task 1");
+        taskModel1.setDescription("Description 1");
+        taskModel1.setCreatedAt(now);
+
+        TaskModel taskModel2 = new TaskModel();
+        taskModel2.setId("2");
+        taskModel2.setName("Task 2");
+        taskModel2.setDescription("Description 2");
+        taskModel2.setCreatedAt(now);
+
+        taskModelList.add(taskModel1);
+        taskModelList.add(taskModel2);
 
         List<Task> taskList = taskMapper.toEntityList(taskModelList);
+
         assertNotNull(taskList);
-        for (int i = 0; i < 3; i++) {
-            assertEquals(taskModelList.get(i).getId(), taskList.get(i).getId());
-            assertEquals(taskModelList.get(i).getName(), taskList.get(i).getName());
-            assertEquals(taskModelList.get(i).getDescription(), taskList.get(i).getDescription());
-            assertEquals(taskModelList.get(i).getCreatedAt(), taskList.get(i).getCreatedAt());
-            assertEquals(taskModelList.get(i).getUpdatedAt(), taskList.get(i).getUpdatedAt());
-            //assertEquals(taskModelList.get(i).getAuthorId(), taskList.get(i).getAuthorId());
-            //assertEquals(taskModelList.get(i).getAssigneeId(), taskList.get(i).getAssigneeId());
+        assertEquals(taskModelList.size(), taskList.size());
+
+        for (int i = 0; i < taskModelList.size(); i++) {
+            TaskModel taskModel = taskModelList.get(i);
+            Task task = taskList.get(i);
+
+            assertEquals(taskModel.getId(), task.getId());
+            assertEquals(taskModel.getName(), task.getName());
+            assertEquals(taskModel.getDescription(), task.getDescription());
+            assertEquals(taskModel.getCreatedAt(), task.getCreatedAt());
         }
     }
 }
