@@ -8,11 +8,14 @@ import org.springframework.data.annotation.ReadOnlyProperty;
 
 import java.time.Instant;
 import java.util.Set;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "tasks")
 public class Task {
     @Id
     private String id;
@@ -20,6 +23,7 @@ public class Task {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
+    //@Enumerated(value = EnumType.STRING)
     private TaskStatus status;
 
     private String authorId;

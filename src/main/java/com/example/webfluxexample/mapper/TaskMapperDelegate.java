@@ -30,6 +30,9 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setId(taskModel.getId());
         task.setName(taskModel.getName());
         task.setDescription(taskModel.getDescription());
+        task.setStatus(taskModel.getStatus());
+        task.setAuthorId(taskModel.getAuthorId());
+        task.setAssigneeId(taskModel.getAssigneeId());
         if (taskModel.getObserverIds() != null) {
             task.setObserverIds(taskModel.getObserverIds());
         }
@@ -48,6 +51,7 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         taskModel.setId(task.getId());
         taskModel.setName(task.getName());
         taskModel.setDescription(task.getDescription());
+        taskModel.setStatus(task.getStatus());
         taskModel.setCreatedAt(task.getCreatedAt());
         taskModel.setUpdatedAt(task.getUpdatedAt());
         taskModel.setAuthorId(task.getAuthorId());

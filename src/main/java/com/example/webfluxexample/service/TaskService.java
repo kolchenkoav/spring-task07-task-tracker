@@ -117,7 +117,7 @@ public class TaskService {
      */
     public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel) {
         taskModel.setId(id);
-
+        log.info("<<< taskModel: {} >>>", taskModel);
         return taskRepository.findById(id).flatMap(taskForUpdate -> {
             taskForUpdate.setId(id);
             taskForUpdate.setUpdatedAt(Instant.now());
