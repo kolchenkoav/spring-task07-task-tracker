@@ -7,6 +7,8 @@ import com.example.webfluxexample.model.TaskModel;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import reactor.core.publisher.Mono;
 
 import java.util.Comparator;
 import java.util.List;
@@ -86,5 +88,60 @@ public class TaskControllerTest extends AbstractTest {
                         assertEquals(expected.getObservers(), actual.getObservers());
                     }
                 });
+    }
+
+    @Test
+    @DisplayName("When create task, then return created task")
+    public void whenCreateTaskThenReturnCreatedTask() {
+        TaskModel taskModel = new TaskModel();
+        taskModel.setName("New Task");
+        taskModel.setDescription("Description of new task");
+
+        webTestClient.post().uri("/api/v1/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(taskModel), TaskModel.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TaskModel.class)
+                .consumeWith(response -> {
+                    TaskModel createdTask = response.getResponseBody();
+                    assert createdTask != null;
+                    assert createdTask.getName().equals("New Task");
+                    assert createdTask.getDescription().equals("Description of new task");
+                });
+    }
+
+    @Test
+    @DisplayName("When update task, then return updated task")
+    public void whenUpdateTaskThenReturnUpdatedTask() {
+        String taskId = FIRST_TASK_ID;
+        TaskModel updatedTaskModel = new TaskModel();
+        updatedTaskModel.setId(FIRST_TASK_ID);
+        updatedTaskModel.setName("Updated Task");
+        updatedTaskModel.setDescription("Updated description");
+
+        webTestClient.put().uri("/api/v1/tasks/{id}", taskId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(updatedTaskModel), TaskModel.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(TaskModel.class)
+                .consumeWith(response -> {
+                    TaskModel updatedTask = response.getResponseBody();
+                    assert updatedTask != null;
+                    assert updatedTask.getId().equals(taskId);
+                    assert updatedTask.getName().equals("Updated Task");
+                    assert updatedTask.getDescription().equals("Updated description");
+                });
+    }
+
+    @Test
+    @DisplayName("When delete task, then return no content")
+    public void whenDeleteTaskThenReturnNoContent() {
+        String taskId = FIRST_TASK_ID;
+
+        webTestClient.delete().uri("/api/v1/tasks/{id}", taskId)
+                .exchange()
+                .expectStatus().isNoContent();
     }
 }
