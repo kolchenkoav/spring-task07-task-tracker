@@ -7,11 +7,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest extends AbstractTest {
+    @Container
+    static MongoDBContainer mongoDBContainer1 = new MongoDBContainer("mongo:6.0.8")
+            .withReuse(true);
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer1::getReplicaSetUrl);
+    }
 
     @Test
     @DisplayName("When get all users, then return list of users from database")
@@ -94,7 +107,7 @@ public class UserControllerTest extends AbstractTest {
     @Test
     @DisplayName("When delete user, then return no content")
     public void whenDeleteUserThenReturnNoContent() {
-        String userId = "some_user_id";
+        String userId = FIRST_USER_ID;
 
         webTestClient.delete().uri("/api/v1/users/{id}", userId)
                 .exchange()
