@@ -102,7 +102,7 @@ public class TaskService {
         task.setCreatedAt(instant);
         task.setUpdatedAt(instant);
 
-        log.info("save task {}", taskModel);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> save task {}", taskModel);
         Mono<Task> taskMono = taskRepository.save(task);
         return taskMono.map(taskMapper::toModel).cast(TaskModel.class)
             .map(ResponseEntity::ok);

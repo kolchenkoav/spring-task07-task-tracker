@@ -23,7 +23,6 @@ public class Task {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
-    //@Enumerated(value = EnumType.STRING)
     private TaskStatus status;
 
     private String authorId;

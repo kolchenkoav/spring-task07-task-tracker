@@ -82,20 +82,29 @@ public class UserService {
      * @return Монада с ответом, содержащим обновленную модель пользователя или статус 404, если пользователь не найден.
      */
     public Mono<ResponseEntity<UserModel>> update(String id, UserModel userModel) {
-        return userRepository.findById(id).flatMap(userForUpdate -> {
-            User user = userMapper.toEntity(userModel);
-
-            if (StringUtils.hasText(user.getUsername())) {
-                userForUpdate.setUsername(user.getUsername());
-            }
-            if (StringUtils.hasText(user.getEmail())) {
-                userForUpdate.setEmail(user.getEmail());
-            }
-
-            return userRepository.save(userForUpdate).map(userMapper::toModel)
-                    .map(ResponseEntity::ok)
-                    .defaultIfEmpty(ResponseEntity.notFound().build());
-        });
+//        return userRepository.findById(id).flatMap(userForUpdate -> {
+//            User user = userMapper.toEntity(userModel);
+//
+//            if (StringUtils.hasText(user.getUsername())) {
+//                userForUpdate.setUsername(user.getUsername());
+//            }
+//            if (StringUtils.hasText(user.getEmail())) {
+//                userForUpdate.setEmail(user.getEmail());
+//            }
+//
+//            return userRepository.save(userForUpdate).map(userMapper::toModel)
+//                    .map(ResponseEntity::ok)
+//                    .defaultIfEmpty(ResponseEntity.notFound().build());
+//        });
+        return userRepository.findById(id)
+                .flatMap(existingUser -> {
+                    existingUser.setUsername(userModel.getUsername());
+                    existingUser.setEmail(userModel.getEmail());
+                    return userRepository.save(existingUser);
+                })
+                .map(userMapper::toModel)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**

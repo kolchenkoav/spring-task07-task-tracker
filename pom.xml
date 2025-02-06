@@ -73,6 +73,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 	</dependencies>
 
 	<build>
@@ -106,6 +107,17 @@
 							<version>${lombok-mapstruct-binding.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<configuration>
+					<includes>
+						<include>com/example/webfluxexample/web/controller/UserControllerTest.java</include>
+						<include>com/example/webfluxexample/web/controller/TaskControllerTest.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
