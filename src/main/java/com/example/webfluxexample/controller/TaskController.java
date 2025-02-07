@@ -4,6 +4,7 @@ import com.example.webfluxexample.model.TaskModel;
 import com.example.webfluxexample.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -57,6 +58,7 @@ public class TaskController {
      * @return Mono<ResponseEntity<TaskModel>> обновленная задача.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Mono<ResponseEntity<TaskModel>> updateTask(@PathVariable String id,
                                                       @RequestBody TaskModel taskModel) {
         return taskService.update(id, taskModel);

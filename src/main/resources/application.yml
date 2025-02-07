@@ -2,3 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/appdatabase?authSource=admin
+
+app:
+  security:
+    type: inMemory
