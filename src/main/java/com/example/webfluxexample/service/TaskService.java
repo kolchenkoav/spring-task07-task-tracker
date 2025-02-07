@@ -9,6 +9,8 @@ import com.example.webfluxexample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -115,7 +117,11 @@ public class TaskService {
      * @param taskModel Модель задачи.
      * @return Монада ответа с моделью задачи.
      */
-    public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel) {
+    public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel, UserDetails userDetails) {
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            log.info("User can update task");
+
+        }
         taskModel.setId(id);
         log.info("<<< taskModel: {} >>>", taskModel);
         return taskRepository.findById(id).flatMap(taskForUpdate -> {

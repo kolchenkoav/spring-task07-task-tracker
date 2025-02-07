@@ -60,9 +60,9 @@ public class SecurityConfiguration {
                 .password(passwordEncoder().encode("12345"))
                 .roles("USER")
                 .build();
-        UserDetails admin = User.withUsername("admin")
+        UserDetails admin = User.withUsername("manager")
                 .password(passwordEncoder().encode("11111"))
-                .roles("ADMIN")
+                .roles("MANAGER")
                 .build();
         return new MapReactiveUserDetailsService(user, admin);
     }

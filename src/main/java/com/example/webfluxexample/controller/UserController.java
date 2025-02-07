@@ -4,6 +4,7 @@ import com.example.webfluxexample.model.UserModel;
 import com.example.webfluxexample.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +23,7 @@ public class UserController {
      *
      * @return Flux<UserModel> список всех пользователей.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @GetMapping
     public Flux<UserModel> getAllTasks() {
         return userService.findAll();
@@ -33,6 +35,7 @@ public class UserController {
      * @param id идентификатор пользователя.
      * @return Mono<ResponseEntity<UserModel>> пользователь.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @GetMapping("/{id}")
     public Mono<ResponseEntity<UserModel>> getUserById(@PathVariable String id) {
         return userService.findById(id);
@@ -44,6 +47,7 @@ public class UserController {
      * @param name имя пользователя.
      * @return Mono<ResponseEntity<UserModel>> пользователь.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @GetMapping("/by-name")
     public Mono<ResponseEntity<UserModel>> getByUsername(@RequestParam String name) {
         return userService.findByUsername(name);
@@ -55,6 +59,7 @@ public class UserController {
      * @param userModel модель пользователя.
      * @return Mono<ResponseEntity<UserModel>> созданный пользователь.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @PostMapping
     public Mono<ResponseEntity<UserModel>> createUser(@RequestBody UserModel userModel) {
         return userService.save(userModel).log();
@@ -67,6 +72,7 @@ public class UserController {
      * @param userModel модель пользователя.
      * @return Mono<ResponseEntity<UserModel>> обновленный пользователь.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @PutMapping("/{id}")
     public Mono<ResponseEntity<UserModel>> updateUser(@PathVariable String id,
                                                       @RequestBody UserModel userModel) {
@@ -79,6 +85,7 @@ public class UserController {
      * @param id идентификатор пользователя.
      * @return Mono<ResponseEntity<Void>> результат удаления.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteUser(@PathVariable String id) {
         return userService.deleteById(id);
