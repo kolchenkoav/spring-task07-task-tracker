@@ -27,6 +27,7 @@ public class TaskControllerTest extends AbstractTest {
     @Container
     static MongoDBContainer mongoDBContainer1 = new MongoDBContainer("mongo:6.0.8")
             .withReuse(true);
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer1::getReplicaSetUrl);
@@ -66,7 +67,6 @@ public class TaskControllerTest extends AbstractTest {
                         null)
         );
 
-        // Выполняем запрос и проверяем ответ
         webTestClient.get().uri("/api/v1/tasks")
                 .exchange()
                 .expectStatus().isOk()
@@ -85,15 +85,11 @@ public class TaskControllerTest extends AbstractTest {
                         assertEquals(expected.getId(), actual.getId());
                         assertEquals(expected.getName(), actual.getName());
                         assertEquals(expected.getDescription(), actual.getDescription());
-//                        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
-//                        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
                         assertEquals(expected.getStatus(), actual.getStatus());
                         assertEquals(expected.getAuthorId(), actual.getAuthorId());
                         assertEquals(expected.getAssigneeId(), actual.getAssigneeId());
                         assertEquals(expected.getObserverIds(), actual.getObserverIds());
-                        //assertEquals(expected.getAuthor(), actual.getAuthor());
-                        //assertEquals(expected.getAssignee(), actual.getAssignee());
-                        //assertEquals(expected.getObservers(), actual.getObservers());
+                        ;
                     }
                 });
     }

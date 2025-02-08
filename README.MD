@@ -18,6 +18,7 @@
 
 - `spring-boot-starter-webflux` - для реактивного программирования
 - `spring-boot-starter-data-mongodb` - для работы с MongoDB
+- `Spring Security` - для аутентификации и авторизации
 - `lombok` - для сокращения шаблонного кода
 - `mapstruct` - для преобразования объектов
 - `reactor-test` - для тестирования реактивных потоков

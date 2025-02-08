@@ -40,7 +40,7 @@ public class UserController {
      * Получает пользователя по идентификатору.
      *
      * @param id идентификатор пользователя.
-     * @return Mono<ResponseEntity<UserModel>> пользователь.
+     * @return Mono<ResponseEntity < UserModel>> пользователь.
      */
     @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @GetMapping("/{id}")
@@ -48,32 +48,13 @@ public class UserController {
         return userService.findById(id);
     }
 
-//    /**
-//     * Получает пользователя по имени.
-//     *
-//     * @param name имя пользователя.
-//     * @return Mono<ResponseEntity<UserModel>> пользователь.
-//     */
-//    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
-//    @GetMapping("/by-name")
-//    public Mono<ResponseEntity<UserModel>> getByUsername(@RequestParam String name) {
-//        return userService.findByUsername(name);
-//    }
-
     /**
-     * Создание учетной записи пользователя.
+     * Создает новый аккаунт пользователя.
      *
-     * @param userDto Данные пользователя.
-     * @param roleType Тип роли.
-     * @return Ответ с данными созданного пользователя.
+     * @param userDto  данные пользователя.
+     * @param roleType тип роли.
+     * @return Mono<ResponseEntity<UserDto>> данные созданного пользователя.
      */
-//    @PostMapping("/account")
-//    public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
-//                                                           @RequestParam RoleType roleType) {
-//        return Mono.just(ResponseEntity.status(HttpStatus.CREATED)
-//                .body(createAccount(userDto, roleType)));
-//
-//    }
     @PostMapping("/account")
     public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
                                                            @RequestParam RoleType roleType) {
@@ -82,26 +63,13 @@ public class UserController {
                 .map(userDtoResponse -> ResponseEntity.status(HttpStatus.CREATED).body(userDtoResponse));
     }
 
-
-
     /**
-     * Создание учетной записи.
+     * Создает учетную запись пользователя.
      *
-     * @param userDto Данные пользователя.
-     * @param roleType Тип роли.
-     * @return Данные созданного пользователя.
+     * @param userDto  данные пользователя.
+     * @param roleType тип роли.
+     * @return Mono<UserDto> данные созданного пользователя.
      */
-//    private UserDto createAccount(UserDto userDto, RoleType roleType) {
-//        var user = new User();
-//        user.setPassword(userDto.getPassword());
-//        user.setUsername(userDto.getUsername());
-//
-//        var createdUser = userService.createNewAccount(user, Role.from(roleType));
-//        return UserDto.builder()
-//                .username(createdUser.getUsername())
-//                .password(createdUser.getPassword())
-//                .build();
-//    }
     private Mono<UserDto> createAccount(UserDto userDto, RoleType roleType) {
         var user = new User();
         user.setPassword(userDto.getPassword());
@@ -114,12 +82,11 @@ public class UserController {
                         .build());
     }
 
-
     /**
      * Создает нового пользователя.
      *
      * @param userModel модель пользователя.
-     * @return Mono<ResponseEntity<UserModel>> созданный пользователь.
+     * @return Mono<ResponseEntity < UserModel>> созданный пользователь.
      */
     @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @PostMapping
@@ -130,9 +97,9 @@ public class UserController {
     /**
      * Обновляет существующего пользователя.
      *
-     * @param id идентификатор пользователя.
+     * @param id        идентификатор пользователя.
      * @param userModel модель пользователя.
-     * @return Mono<ResponseEntity<UserModel>> обновленный пользователь.
+     * @return Mono<ResponseEntity < UserModel>> обновленный пользователь.
      */
     @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @PutMapping("/{id}")
@@ -145,7 +112,7 @@ public class UserController {
      * Удаляет пользователя по идентификатору.
      *
      * @param id идентификатор пользователя.
-     * @return Mono<ResponseEntity<Void>> результат удаления.
+     * @return Mono<ResponseEntity < Void>> результат удаления.
      */
     @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @DeleteMapping("/{id}")

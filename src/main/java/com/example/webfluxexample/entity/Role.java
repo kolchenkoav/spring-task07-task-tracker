@@ -35,7 +35,6 @@ public class Role {
     public static Role from(RoleType type) {
         var role = new Role();
         role.setAuthority(type);
-
         return role;
     }
 }

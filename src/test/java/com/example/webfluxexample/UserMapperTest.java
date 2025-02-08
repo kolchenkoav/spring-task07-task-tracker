@@ -19,6 +19,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ * UserMapperTest - тестовый класс для проверки корректности работы маппера UserMapper.
+ */
 @SpringBootTest
 class UserMapperTest {
     @Autowired
@@ -36,7 +39,6 @@ class UserMapperTest {
         userModel.setId("1");
         userModel.setUsername("User 1");
         userModel.setEmail("mail@mail.ru");
-        //userModel.setPassword("password");
 
         User user = UserMapper.INSTANCE.toEntity(userModel);
 

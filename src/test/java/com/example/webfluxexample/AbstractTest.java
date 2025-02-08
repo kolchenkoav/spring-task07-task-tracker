@@ -3,7 +3,7 @@ package com.example.webfluxexample;
 import com.example.webfluxexample.entity.*;
 import com.example.webfluxexample.repository.TaskRepository;
 import com.example.webfluxexample.repository.UserRepository;
-import com.example.webfluxexample.service.UserService;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,14 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.MongoDBContainer;
 
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
@@ -50,22 +45,6 @@ public abstract class AbstractTest {
 
     protected static Instant CREATED_AT = Instant.now();
     protected static Instant UPDATED_AT = Instant.now().plusSeconds(1000);
-//    /**
-//     * Контейнер MongoDB для тестирования.
-//     */
-//    @Container
-//    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.8")
-//            .withReuse(true);
-//
-//    /**
-//     * Настройка динамических свойств для подключения к MongoDB.
-//     *
-//     * @param registry Регистр динамических свойств.
-//     */
-//    @DynamicPropertySource
-//    static void setProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-//    }
 
     @Autowired
     protected WebTestClient webTestClient;

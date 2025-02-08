@@ -2,12 +2,10 @@ package com.example.webfluxexample.web.controller;
 
 import com.example.webfluxexample.AbstractTest;
 
-import com.example.webfluxexample.controller.UserController;
 import com.example.webfluxexample.model.UserModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -26,19 +24,11 @@ public class UserControllerTest extends AbstractTest {
     @Container
     static MongoDBContainer mongoDBContainer1 = new MongoDBContainer("mongo:6.0.8")
             .withReuse(true);
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer1::getReplicaSetUrl);
     }
-
-//    @Test
-//    @WithMockUser(username = "user", roles = "USER")
-//    public void whenUserRequestMethodWithUserRole_thenReturnOk() throws Exception {
-//
-//        mockMvc.perform(get("/api/v1/users"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-//    }
 
     @Test
     @WithMockUser(username = "user", roles = "USER")

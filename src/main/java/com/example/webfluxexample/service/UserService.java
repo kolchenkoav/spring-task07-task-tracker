@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -50,21 +49,25 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-
-    //    public Mono<ResponseEntity<UserModel>> findByUsername(String name) {
-//        return userRepository.findByUsername(name)
-//                .map(userMapper::toModel)
-//                .map(ResponseEntity::ok)
-//                .defaultIfEmpty(ResponseEntity.notFound().build());
-//    }
+    /**
+     * Найти пользователя по имени пользователя.
+     *
+     * @param username Имя пользователя.
+     * @return Монада с найденным пользователем.
+     */
     public Mono<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * Сохранить нового пользователя.
+     *
+     * @param user Модель пользователя для сохранения.
+     * @return Монада с ответом, содержащим сохраненную модель пользователя.
+     */
     public Mono<User> createNewAccount(User user, Role role) {
         user.setRoles(Collections.singleton(role));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        //role.setUser(user);
         return userRepository.save(user);
     }
 
@@ -91,20 +94,6 @@ public class UserService {
      * @return Монада с ответом, содержащим обновленную модель пользователя или статус 404, если пользователь не найден.
      */
     public Mono<ResponseEntity<UserModel>> update(String id, UserModel userModel) {
-//        return userRepository.findById(id).flatMap(userForUpdate -> {
-//            User user = userMapper.toEntity(userModel);
-//
-//            if (StringUtils.hasText(user.getUsername())) {
-//                userForUpdate.setUsername(user.getUsername());
-//            }
-//            if (StringUtils.hasText(user.getEmail())) {
-//                userForUpdate.setEmail(user.getEmail());
-//            }
-//
-//            return userRepository.save(userForUpdate).map(userMapper::toModel)
-//                    .map(ResponseEntity::ok)
-//                    .defaultIfEmpty(ResponseEntity.notFound().build());
-//        });
         return userRepository.findById(id)
                 .flatMap(existingUser -> {
                     existingUser.setUsername(userModel.getUsername());
