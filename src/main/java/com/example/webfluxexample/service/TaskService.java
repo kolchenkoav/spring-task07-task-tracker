@@ -8,6 +8,7 @@ import com.example.webfluxexample.repository.TaskRepository;
 import com.example.webfluxexample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -120,7 +121,10 @@ public class TaskService {
     public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel, UserDetails userDetails) {
         if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             log.info("User can update task");
-
+            log.info("UPDATE id:{} taskModel:{}", id, taskModel);
+            if (taskModel.getName() != null || taskModel.getDescription() != null || taskModel.getStatus() != null || taskModel.getAuthorId() != null || taskModel.getAssigneeId() != null) {
+                return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
+            }
         }
         taskModel.setId(id);
         log.info("<<< taskModel: {} >>>", taskModel);

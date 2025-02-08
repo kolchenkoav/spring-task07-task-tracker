@@ -1,8 +1,13 @@
 package com.example.webfluxexample.controller;
 
+import com.example.webfluxexample.entity.Role;
+import com.example.webfluxexample.entity.RoleType;
+import com.example.webfluxexample.entity.User;
+import com.example.webfluxexample.model.UserDto;
 import com.example.webfluxexample.model.UserModel;
 import com.example.webfluxexample.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,17 +46,63 @@ public class UserController {
         return userService.findById(id);
     }
 
+//    /**
+//     * Получает пользователя по имени.
+//     *
+//     * @param name имя пользователя.
+//     * @return Mono<ResponseEntity<UserModel>> пользователь.
+//     */
+//    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
+//    @GetMapping("/by-name")
+//    public Mono<ResponseEntity<UserModel>> getByUsername(@RequestParam String name) {
+//        return userService.findByUsername(name);
+//    }
+
     /**
-     * Получает пользователя по имени.
+     * Создание учетной записи пользователя.
      *
-     * @param name имя пользователя.
-     * @return Mono<ResponseEntity<UserModel>> пользователь.
+     * @param userDto Данные пользователя.
+     * @param roleType Тип роли.
+     * @return Ответ с данными созданного пользователя.
      */
-    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
-    @GetMapping("/by-name")
-    public Mono<ResponseEntity<UserModel>> getByUsername(@RequestParam String name) {
-        return userService.findByUsername(name);
+    @PostMapping("/account")
+    public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
+                                                           @RequestParam RoleType roleType) {
+        return Mono.just(ResponseEntity.status(HttpStatus.CREATED)
+                .body(createAccount(userDto, roleType)));
+
     }
+
+    /**
+     * Создание учетной записи.
+     *
+     * @param userDto Данные пользователя.
+     * @param roleType Тип роли.
+     * @return Данные созданного пользователя.
+     */
+//    private UserDto createAccount(UserDto userDto, RoleType roleType) {
+//        var user = new User();
+//        user.setPassword(userDto.getPassword());
+//        user.setUsername(userDto.getUsername());
+//
+//        var createdUser = userService.createNewAccount(user, Role.from(roleType));
+//        return UserDto.builder()
+//                .username(createdUser.getUsername())
+//                .password(createdUser.getPassword())
+//                .build();
+//    }
+    private Mono<UserDto> createAccount(UserDto userDto, RoleType roleType) {
+        var user = new User();
+        user.setPassword(userDto.getPassword());
+        user.setUsername(userDto.getUsername());
+
+        return userService.createNewAccount(user, Role.from(roleType))
+                .map(createdUser -> UserDto.builder()
+                        .username(createdUser.getUsername())
+                        .password(createdUser.getPassword())
+                        .build());
+    }
+
 
     /**
      * Создает нового пользователя.

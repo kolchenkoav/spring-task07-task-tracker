@@ -1,5 +1,6 @@
 package com.example.webfluxexample.service;
 
+import com.example.webfluxexample.entity.Role;
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.mapper.UserMapper;
 import com.example.webfluxexample.model.UserModel;
@@ -7,11 +8,13 @@ import com.example.webfluxexample.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Найти всех пользователей.
@@ -46,17 +50,22 @@ public class UserService {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Найти пользователя по имени пользователя.
-     *
-     * @param name Имя пользователя.
-     * @return Монада с ответом, содержащим модель пользователя или статус 404, если пользователь не найден.
-     */
-    public Mono<ResponseEntity<UserModel>> findByUsername(String name) {
-        return userRepository.findByUsername(name)
-                .map(userMapper::toModel)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+
+    //    public Mono<ResponseEntity<UserModel>> findByUsername(String name) {
+//        return userRepository.findByUsername(name)
+//                .map(userMapper::toModel)
+//                .map(ResponseEntity::ok)
+//                .defaultIfEmpty(ResponseEntity.notFound().build());
+//    }
+    public Mono<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Mono<User> createNewAccount(User user, Role role) {
+        user.setRoles(Collections.singleton(role));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        role.setUser(user);
+        return userRepository.save(user);
     }
 
     /**
@@ -77,7 +86,7 @@ public class UserService {
     /**
      * Обновить существующего пользователя.
      *
-     * @param id Идентификатор пользователя для обновления.
+     * @param id        Идентификатор пользователя для обновления.
      * @param userModel Модель пользователя с обновленными данными.
      * @return Монада с ответом, содержащим обновленную модель пользователя или статус 404, если пользователь не найден.
      */

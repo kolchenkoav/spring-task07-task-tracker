@@ -66,6 +66,7 @@ public class TaskController {
      * @param taskModel модель задачи.
      * @return Mono<ResponseEntity < TaskModel>> обновленная задача.
      */
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     @PutMapping("/{id}")
     public Mono<ResponseEntity<TaskModel>> updateTask(@PathVariable String id,
                                                       @RequestBody TaskModel taskModel,
