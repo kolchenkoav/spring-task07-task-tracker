@@ -1,8 +1,6 @@
 package com.example.webfluxexample;
 
-import com.example.webfluxexample.entity.Task;
-import com.example.webfluxexample.entity.TaskStatus;
-import com.example.webfluxexample.entity.User;
+import com.example.webfluxexample.entity.*;
 import com.example.webfluxexample.repository.TaskRepository;
 import com.example.webfluxexample.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -74,27 +72,39 @@ public abstract class AbstractTest {
         userRepository.saveAll(List.of(
                 new User(FIRST_USER_ID,
                         "First_user",
-                        "First_user@some.com"
+                        "First_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 ),
                 new User(SECOND_USER_ID,
                         "Second_user",
-                        "Second_user@some.com"
+                        "Second_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 ),
                 new User(THIRD_USER_ID,
                         "Third_user",
-                        "Third_user@some.com"
+                        "Third_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 ),
                 new User(FOURTH_USER_ID,
                         "Fourth_user",
-                        "Fourth_user@some.com"
+                        "Fourth_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 ),
                 new User(AUTHOR_USER_ID,
                         "Author_user",
-                        "Author_user@some.com"
+                        "Author_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 ),
                 new User(ASSIGNEE_USER_ID,
                         "Assignee_user",
-                        "Assignee_user@some.com"
+                        "Assignee_user@some.com",
+                        "123",
+                        Set.of(Role.from(RoleType.ROLE_USER))
                 )
         )).collectList().block();
 

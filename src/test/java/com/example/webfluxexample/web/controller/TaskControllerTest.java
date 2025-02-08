@@ -1,6 +1,8 @@
 package com.example.webfluxexample.web.controller;
 
 import com.example.webfluxexample.AbstractTest;
+import com.example.webfluxexample.entity.Role;
+import com.example.webfluxexample.entity.RoleType;
 import com.example.webfluxexample.entity.TaskStatus;
 import com.example.webfluxexample.entity.User;
 import com.example.webfluxexample.model.TaskModel;
@@ -32,13 +34,10 @@ public class TaskControllerTest extends AbstractTest {
                         AUTHOR_USER_ID,
                         ASSIGNEE_USER_ID,
                         Set.of(FIRST_USER_ID, SECOND_USER_ID),
-                        new User(AUTHOR_USER_ID, "Author_user", "Author_user@some.com"),
-                        new User(ASSIGNEE_USER_ID, "Assignee_user", "Assignee_user@some.com"),
-                        Set.of(
-                                new User(FIRST_USER_ID, "First_user", "First_user@some.com"),
-                                new User(SECOND_USER_ID, "Second_user", "Second_user@some.com")
-                        )
-                ),
+                        null,
+                        null,
+                        null),
+
                 new TaskModel(
                         SECOND_TASK_ID,
                         "Task 2",
@@ -49,13 +48,9 @@ public class TaskControllerTest extends AbstractTest {
                         AUTHOR_USER_ID,
                         ASSIGNEE_USER_ID,
                         Set.of(THIRD_USER_ID, FOURTH_USER_ID),
-                        new User(AUTHOR_USER_ID, "Author_user", "Author_user@some.com"),
-                        new User(ASSIGNEE_USER_ID, "Assignee_user", "Assignee_user@some.com"),
-                        Set.of(
-                                new User(THIRD_USER_ID, "Third_user", "Third_user@some.com"),
-                                new User(FOURTH_USER_ID, "Fourth_user", "Fourth_user@some.com")
-                        )
-                )
+                        null,
+                        null,
+                        null)
         );
 
         // Выполняем запрос и проверяем ответ

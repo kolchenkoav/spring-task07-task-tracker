@@ -36,6 +36,7 @@ class UserMapperTest {
         userModel.setId("1");
         userModel.setUsername("User 1");
         userModel.setEmail("mail@mail.ru");
+        //userModel.setPassword("password");
 
         User user = UserMapper.INSTANCE.toEntity(userModel);
 
