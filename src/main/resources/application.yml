@@ -5,4 +5,4 @@ spring:
 
 app:
   security:
-    type: inMemory
+    type: db

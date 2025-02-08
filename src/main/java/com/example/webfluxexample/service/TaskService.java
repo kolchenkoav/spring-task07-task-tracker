@@ -119,6 +119,7 @@ public class TaskService {
      * @return Монада ответа с моделью задачи.
      */
     public Mono<ResponseEntity<TaskModel>> update(String id, TaskModel taskModel, UserDetails userDetails) {
+        log.info("Username: {} role: {}", userDetails.getUsername(), userDetails.getAuthorities().toString());
         if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             log.info("User can update task");
             log.info("UPDATE id:{} taskModel:{}", id, taskModel);

@@ -7,6 +7,7 @@ import com.example.webfluxexample.model.UserDto;
 import com.example.webfluxexample.model.UserModel;
 import com.example.webfluxexample.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
 /**
  * Контроллер для управления пользователями.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -75,6 +77,7 @@ public class UserController {
     @PostMapping("/account")
     public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
                                                            @RequestParam RoleType roleType) {
+        log.info("createUserAccount() userDto: {} roleType: {}", userDto, roleType);
         return createAccount(userDto, roleType)
                 .map(userDtoResponse -> ResponseEntity.status(HttpStatus.CREATED).body(userDtoResponse));
     }

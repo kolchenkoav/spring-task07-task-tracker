@@ -64,7 +64,7 @@ public class UserService {
     public Mono<User> createNewAccount(User user, Role role) {
         user.setRoles(Collections.singleton(role));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        role.setUser(user);
+        //role.setUser(user);
         return userRepository.save(user);
     }
 

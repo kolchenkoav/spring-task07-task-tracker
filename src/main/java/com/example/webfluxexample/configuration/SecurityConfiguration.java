@@ -104,7 +104,7 @@ public class SecurityConfiguration {
      */
     private ServerHttpSecurity buildDefaultHttpSecurity(ServerHttpSecurity http) {
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange((auth) -> auth.pathMatchers("/api/v1/public/**").permitAll()
+                .authorizeExchange((auth) -> auth.pathMatchers("/api/v1/users/account/**").permitAll()
                         .anyExchange().authenticated())
                 .httpBasic(Customizer.withDefaults());
     }
