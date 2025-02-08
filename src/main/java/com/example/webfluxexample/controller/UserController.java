@@ -65,13 +65,21 @@ public class UserController {
      * @param roleType Тип роли.
      * @return Ответ с данными созданного пользователя.
      */
+//    @PostMapping("/account")
+//    public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
+//                                                           @RequestParam RoleType roleType) {
+//        return Mono.just(ResponseEntity.status(HttpStatus.CREATED)
+//                .body(createAccount(userDto, roleType)));
+//
+//    }
     @PostMapping("/account")
     public Mono<ResponseEntity<UserDto>> createUserAccount(@RequestBody UserDto userDto,
                                                            @RequestParam RoleType roleType) {
-        return Mono.just(ResponseEntity.status(HttpStatus.CREATED)
-                .body(createAccount(userDto, roleType)));
-
+        return createAccount(userDto, roleType)
+                .map(userDtoResponse -> ResponseEntity.status(HttpStatus.CREATED).body(userDtoResponse));
     }
+
+
 
     /**
      * Создание учетной записи.
